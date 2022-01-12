@@ -1,4 +1,4 @@
-import { Children, ReactNode } from "react";
+import { ReactNode } from "react";
 import { AuthProvider } from "./Auth";
 
 interface childrenProps {
