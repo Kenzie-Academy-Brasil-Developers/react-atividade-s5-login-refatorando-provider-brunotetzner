@@ -10,7 +10,7 @@ interface DadosData {
   password: string;
 }
 export const Login = () => {
-  const { signIn } = useAuth();
+  const { signIn, error } = useAuth();
   const formSchema = yup.object().shape({
     email: yup
       .string()
@@ -40,6 +40,7 @@ export const Login = () => {
       <input placeholder="senha" {...register("password")}></input>
       <span>{errors.password?.message}</span>
       <StyledButton type="submit">enviar</StyledButton>
+      {error && <span>{error}</span>}
     </StyledForm>
   );
 };

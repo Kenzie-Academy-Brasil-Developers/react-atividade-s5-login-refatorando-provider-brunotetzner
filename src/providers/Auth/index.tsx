@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 import { useHistory } from "react-router-dom";
+import toast from "react-hot-toast";
 import axios from "axios";
 interface LoginProps {
   children: ReactNode;
@@ -12,6 +13,7 @@ interface AuthContextData {
   signIn: (userData: data) => void;
   Logout: () => void;
   authToken: string;
+  error: string;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
@@ -23,6 +25,8 @@ export const AuthProvider = ({ children }: LoginProps) => {
   const [authToken, setAuthToken] = useState(
     () => localStorage.getItem("token") || ""
   );
+  const [error, setError] = useState("");
+
   // Função para logar na aplicação, recebe os dados pegos do form de login
   const signIn = (userData: data) => {
     axios
@@ -35,21 +39,21 @@ export const AuthProvider = ({ children }: LoginProps) => {
         // redirecionamos para a página logado
         history.push("/dashboard");
       })
-      .catch((err) => console.log(err));
+      .catch((err) => setError("algo deu errado, tente novamente"));
   };
-
   // Função para deslogar da aplicação
   const Logout = () => {
     // limpando o localStorage
     localStorage.clear();
     // limpando o state
     setAuthToken("");
+    setError("");
     // redirecionando para login
     history.push("/");
   };
 
   return (
-    <AuthContext.Provider value={{ authToken, Logout, signIn }}>
+    <AuthContext.Provider value={{ authToken, Logout, signIn, error }}>
       {children}
     </AuthContext.Provider>
   );
